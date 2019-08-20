@@ -13,7 +13,7 @@
         android:layout_height="0dp"
         android:layout_weight="0.2"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:weightSum="4">
 
         <Button
             android:layout_width="0dp"
@@ -35,7 +35,12 @@
             android:layout_weight="1"
            android:text="병원"
            android:id="@+id/hospital"/>
-
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="모두사라져랏"
+            android:id="@+id/clear"/>
 
 
 
@@ -47,15 +52,14 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.6"
-        android:name="com.example.googlemapsandroidapitest.Hospital"
         class="com.google.android.gms.maps.MapFragment" />
 
 
     <Button
-        android:text="장소검색"
+        android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.2"
-        android:id="@+id/button"/>
+        android:text="사라져랏" />
 
 </LinearLayout>

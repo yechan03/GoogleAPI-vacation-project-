@@ -65,9 +65,6 @@ public class MainActivity extends AppCompatActivity
         implements OnMapReadyCallback, ActivityCompat.OnRequestPermissionsResultCallback,
         PlacesListener {
 
-    Restaurant restaurant;
-    Hospital hospital;
-
 
     @Override
     public void onPlacesFailure(PlacesException e) {
@@ -119,8 +116,6 @@ public class MainActivity extends AppCompatActivity
     public void onPlacesFinished() {
 
     }
-
-
     private GoogleMap mGoogleMap = null;
     private Marker currentMarker = null;
 
@@ -152,9 +147,13 @@ public class MainActivity extends AppCompatActivity
     // (참고로 Toast에서는 Context가 필요했습니다.)
 
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
-
+        Button clear = (Button)findViewById(R.id.clear);
         Button retaurant =(Button)findViewById(R.id.restaurant);
         Button convenience_store =(Button)findViewById(R.id.convenience_store);
         Button hospital =(Button)findViewById(R.id.hospital);
@@ -170,14 +169,38 @@ public class MainActivity extends AppCompatActivity
         previous_marker = new ArrayList<Marker>();
 
         Button button = (Button)findViewById(R.id.button);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showPlaceInformation(currentPosition);
+                currentMarker.remove();
+            }
+        });
+
+        retaurant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPlaceInformation(currentPosition,PlaceType.RESTAURANT);
+            }
+        });
+
+        convenience_store.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPlaceInformation(currentPosition,PlaceType.CONVENIENCE_STORE);
+            }
+        });
+
+        hospital.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                showPlaceInformation(currentPosition,PlaceType.HOSPITAL);
             }
         });
 
         mLayout = findViewById(R.id.layout_main);
+
 
 
         Log.d(TAG, "onCreate");
@@ -202,10 +225,37 @@ public class MainActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        clear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mGoogleMap.clear();
+            }
+        });
+
+
+    }
+
+    public void showPlaceInformation(LatLng location, String place)
+    {
+        mGoogleMap.clear();//지도 클리어
+
+        if (previous_marker != null)
+            previous_marker.clear();//지역정보 마커 클리어
+
+        new NRPlaces.Builder()
+                .listener(MainActivity.this)
+                .key("AIzaSyAARybWMbdTBGdmIfkFmPpWxdU30oQYACg")
+                .latlng(location.latitude, location.longitude)//현재 위치
+                .radius(400) //300 미터 내에서 검색
+                .type(place) //편의점괄호안에있는거 컨트롤로 들어가
+                .build()
+                .execute();
+
 
     }
 
 
+//예찬이는 앱을 잘만드는것 같다.
 
 
     LocationCallback locationCallback = new LocationCallback() {
@@ -464,22 +514,7 @@ public class MainActivity extends AppCompatActivity
 
 
 
-    public void showPlaceInformation(LatLng location)
-    {
-        mGoogleMap.clear();//지도 클리어
 
-        if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
-        new NRPlaces.Builder()
-                .listener(MainActivity.this)
-                .key("AIzaSyAARybWMbdTBGdmIfkFmPpWxdU30oQYACg")
-                .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(500) //500 미터 내에서 검색
-                .type(PlaceType.CONVENIENCE_STORE) //편의점
-                .build()
-                .execute();
-    }
 
     public void setDefaultLocation() {
 
